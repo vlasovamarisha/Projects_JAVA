@@ -11,6 +11,8 @@ public class CalculationThread extends Thread {
 
     @Override
     public void run() {
+        long startTime = System.currentTimeMillis(); //время начала работы потока
+
         StringBuilder progressBar = new StringBuilder("Thread " + threadNumber + ": [");
 
         for (int i = 0; i < calculationLength; i++) {
@@ -18,11 +20,14 @@ public class CalculationThread extends Thread {
             System.out.print("\r" + progressBar.toString() + " " + (i + 1) + "/" + calculationLength + "]");
 
             try {
-                Thread.sleep(500);  // Задержка для имитации расчета
+                Thread.sleep(500);  //задержка для имитации расчета
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
+
+        long totalTime = System.currentTimeMillis() - startTime; //вычисляем общее время выполнения и выводим результат
         System.out.println("\r" + progressBar.toString() + " " + calculationLength + "/" + calculationLength + "] Done!");
+        System.out.println("Thread " + threadNumber + " completed in " + totalTime + " ms.");
     }
 }
