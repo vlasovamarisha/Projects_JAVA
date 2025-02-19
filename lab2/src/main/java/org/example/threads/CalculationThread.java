@@ -13,7 +13,7 @@ public class CalculationThread extends Thread {
     public void run() {
         long startTime = System.currentTimeMillis(); //время начала работы потока
 
-        StringBuilder progressBar = new StringBuilder("Thread " + threadNumber + ": [");
+        StringBuilder progressBar = new StringBuilder("Thread " + threadNumber + " (ID: " + getId() + "): [");
 
         for (int i = 0; i < calculationLength; i++) {
             progressBar.append("#");
@@ -28,6 +28,6 @@ public class CalculationThread extends Thread {
 
         long totalTime = System.currentTimeMillis() - startTime; //вычисляем общее время выполнения и выводим результат
         System.out.println("\r" + progressBar.toString() + " " + calculationLength + "/" + calculationLength + "] Done!");
-        System.out.println("Thread " + threadNumber + " completed in " + totalTime + " ms.");
+        System.out.println("Thread " + threadNumber + " (ID: " + getId() + ") completed in " + totalTime + " ms.");
     }
 }
