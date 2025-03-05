@@ -11,6 +11,7 @@ public class AuthorInfoController {
     public String getAuthorInfo(Model model) {
         model.addAttribute("name", "Власова Марина");
         model.addAttribute("group", "ИП-217");
+        model.addAttribute("interests", "JAVA");
         return "author"; // название HTML-шаблона без расширения
     }
 }
