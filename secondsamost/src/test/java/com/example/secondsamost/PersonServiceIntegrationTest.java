@@ -31,18 +31,18 @@ public class PersonServiceIntegrationTest {
 
     @Test
     void testCreatePerson() {
-        Person person = new Person(null, "John Doe", 30);
+        Person person = new Person(null, "Vasya", 30);
         Person savedPerson = personService.createPerson(person);
 
         assertNotNull(savedPerson.getId());
-        assertEquals("John Doe", savedPerson.getName());
+        assertEquals("Vasya", savedPerson.getName());
         assertEquals(30, savedPerson.getAge());
     }
 
     @Test
     void testGetAllPersons() {
         personService.createPerson(new Person(null, "Alice", 25));
-        personService.createPerson(new Person(null, "Bob", 35));
+        personService.createPerson(new Person(null, "Lev", 35));
 
         List<Person> persons = personService.getAllPersons();
         assertEquals(2, persons.size());
