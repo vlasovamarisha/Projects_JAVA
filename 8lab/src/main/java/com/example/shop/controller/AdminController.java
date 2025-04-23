@@ -10,12 +10,12 @@ public class AdminController {
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/edit")
     public String editData() {
-        return "Data edited by admin.";
+        return "edit by admin";
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping("/view")
     public String viewData() {
-        return "Data viewed.";
+        return "view";
     }
 }
