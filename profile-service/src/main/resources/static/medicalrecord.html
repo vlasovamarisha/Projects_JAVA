@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Создание медицинской карты</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #2c3e50;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #3498db;
+            text-decoration: none;
+        }
+        .medical-form {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .section {
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .item-container {
+            margin-bottom: 15px;
+        }
+        .item {
+            border: 1px solid #eee;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            position: relative;
+        }
+        .remove-btn {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        .add-btn {
+            background-color: #2ecc71;
+        }
+        .error {
+            color: #e74c3c;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+<a href="pet.html" class="back-link">← Назад к списку питомцев</a>
+<h1>Создание медицинской карты</h1>
+
+<div class="medical-form">
+    <form id="medicalRecordForm">
+        <div class="form-group">
+            <label for="petId">ID питомца *</label>
+            <input type="text" id="petId" name="petId" required>
+            <div class="error" id="petIdError"></div>
+        </div>
+
+        <div class="section">
+            <h2>Вакцинации</h2>
+            <div class="item-container" id="vaccinationsContainer">
+                <div class="item">
+                    <button type="button" class="remove-btn" onclick="this.parentNode.remove()">×</button>
+                    <div class="form-group">
+                        <label>Название вакцины *</label>
+                        <input type="text" name="vaccinations[0].name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Дата введения *</label>
+                        <input type="date" name="vaccinations[0].administrationDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Дата окончания действия *</label>
+                        <input type="date" name="vaccinations[0].expirationDate" required>
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="add-btn" onclick="addVaccinationField()">+ Добавить вакцину</button>
+        </div>
+
+        <div class="section">
+            <h2>Аллергии</h2>
+            <div class="item-container" id="allergiesContainer">
+                <div class="item">
+                    <button type="button" class="remove-btn" onclick="this.parentNode.remove()">×</button>
+                    <div class="form-group">
+                        <label>Аллергия</label>
+                        <input type="text" name="allergies[0]" value="Нет">
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="add-btn" onclick="addAllergyField()">+ Добавить аллергию</button>
+        </div>
+
+        <div class="section">
+            <h2>Хронические заболевания</h2>
+            <div class="item-container" id="diseasesContainer">
+                <div class="item">
+                    <button type="button" class="remove-btn" onclick="this.parentNode.remove()">×</button>
+                    <div class="form-group">
+                        <label>Название заболевания</label>
+                        <input type="text" name="chronicDiseases[0].name" value="Отсутствуют">
+                    </div>
+                    <div class="form-group">
+                        <label>Описание</label>
+                        <textarea name="chronicDiseases[0].description">Нет</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Дата диагностики</label>
+                        <input type="date" name="chronicDiseases[0].diagnosisDate" value="2022-03-15">
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="add-btn" onclick="addDiseaseField()">+ Добавить заболевание</button>
+        </div>
+
+        <button type="submit">Создать медицинскую карту</button>
+    </form>
+</div>
+
+<script>
+    let vaccinationCount = 1;
+    let allergyCount = 1;
+    let diseaseCount = 1;
+
+    // Добавление поля для вакцины
+    function addVaccinationField() {
+        const container = document.getElementById('vaccinationsContainer');
+        const newField = document.createElement('div');
+        newField.className = 'item';
+        newField.innerHTML = `
+            <button type="button" class="remove-btn" onclick="this.parentNode.remove()">×</button>
+            <div class="form-group">
+                <label>Название вакцины *</label>
+                <input type="text" name="vaccinations[${vaccinationCount}].name" required>
+            </div>
+            <div class="form-group">
+                <label>Дата введения *</label>
+                <input type="date" name="vaccinations[${vaccinationCount}].administrationDate" required>
+            </div>
+            <div class="form-group">
+                <label>Дата окончания действия *</label>
+                <input type="date" name="vaccinations[${vaccinationCount}].expirationDate" required>
+            </div>
+        `;
+        container.appendChild(newField);
+        vaccinationCount++;
+    }
+
+    // Добавление поля для аллергии
+    function addAllergyField() {
+        const container = document.getElementById('allergiesContainer');
+        const newField = document.createElement('div');
+        newField.className = 'item';
+        newField.innerHTML = `
+            <button type="button" class="remove-btn" onclick="this.parentNode.remove()">×</button>
+            <div class="form-group">
+                <label>Аллергия</label>
+                <input type="text" name="allergies[${allergyCount}]">
+            </div>
+        `;
+        container.appendChild(newField);
+        allergyCount++;
+    }
+
+    // Добавление поля для заболевания
+    function addDiseaseField() {
+        const container = document.getElementById('diseasesContainer');
+        const newField = document.createElement('div');
+        newField.className = 'item';
+        newField.innerHTML = `
+            <button type="button" class="remove-btn" onclick="this.parentNode.remove()">×</button>
+            <div class="form-group">
+                <label>Название заболевания</label>
+                <input type="text" name="chronicDiseases[${diseaseCount}].name">
+            </div>
+            <div class="form-group">
+                <label>Описание</label>
+                <textarea name="chronicDiseases[${diseaseCount}].description"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Дата диагностики</label>
+                <input type="date" name="chronicDiseases[${diseaseCount}].diagnosisDate">
+            </div>
+        `;
+        container.appendChild(newField);
+        diseaseCount++;
+    }
+
+    // Обработка отправки формы
+    document.getElementById('medicalRecordForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const form = e.target;
+        const petId = form.petId.value.trim();
+        const petIdError = document.getElementById('petIdError');
+
+        // Валидация ID питомца
+        if (!petId) {
+            petIdError.textContent = 'Пожалуйста, укажите ID питомца';
+            return;
+        }
+        petIdError.textContent = '';
+
+        // Преобразование FormData в JSON
+        const formData = new FormData(form);
+        const jsonData = {
+            petId: petId,
+            vaccinations: [],
+            allergies: [],
+            chronicDiseases: []
+        };
+
+        // Обработка вакцин
+        for (let i = 0; i < vaccinationCount; i++) {
+            const name = formData.get(`vaccinations[${i}].name`);
+            if (name) {
+                jsonData.vaccinations.push({
+                    name: name,
+                    administrationDate: formData.get(`vaccinations[${i}].administrationDate`),
+                    expirationDate: formData.get(`vaccinations[${i}].expirationDate`)
+                });
+            }
+        }
+
+        // Обработка аллергий
+        for (let i = 0; i < allergyCount; i++) {
+            const allergy = formData.get(`allergies[${i}]`);
+            if (allergy) {
+                jsonData.allergies.push(allergy);
+            }
+        }
+
+        // Обработка заболеваний
+        for (let i = 0; i < diseaseCount; i++) {
+            const name = formData.get(`chronicDiseases[${i}].name`);
+            if (name) {
+                jsonData.chronicDiseases.push({
+                    name: name,
+                    description: formData.get(`chronicDiseases[${i}].description`),
+                    diagnosisDate: formData.get(`chronicDiseases[${i}].diagnosisDate`)
+                });
+            }
+        }
+
+        // Отправка данных на сервер
+        try {
+            const response = await fetch('/api/medical-records', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(jsonData)
+            });
+
+            if (!response.ok) {
+                throw new Error('Ошибка при создании медицинской карты');
+            }
+
+            alert('Медицинская карта успешно создана!');
+            window.location.href = 'pet.html';
+        } catch (error) {
+            alert(error.message);
+            console.error('Error:', error);
+        }
+    });
+</script>
+</body>
+</html>
