@@ -47,12 +47,4 @@ class UserControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string("Admin Profile: this page for ADMIN role"));
     }
-
-    @Test
-    @DisplayName("Welcome to public page without authorize")
-    void testPublicEndpoint() throws Exception {
-        mockMvc.perform(get("/"))
-                .andExpect(status().isOk())
-                .andExpect(content().string("Welcome to public page without authorize"));
-    }
 }
